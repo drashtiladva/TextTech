@@ -1,24 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Navbar from "./Components/Navbar";
+
+import About from "./Components/About";
+
+import TextForm from "./Components/TextForm";
+
+ import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Routes
+} from "react-router-dom";
+
+
+
 
 function App() {
+   const[mode,setmode]=useState('light');//where dark mode is enable or not
+    
+   const togglemode=()=>{
+    if(mode==='light'){
+      setmode('dark');
+      document.body.style.backgroundColor="#495057";
+      
+      
+  
+    }
+    else{
+      setmode('light');
+      document.body.style.backgroundColor="white";
+     
+
+      
+
+      
+    }
+  } 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+      <Navbar title="TextTech editor" mode={mode} togglemode={togglemode}/>
+      
+      <div className="container my-3">
+         <Routes>
+         <Route path="/about" element= {<About mode={mode}/>}>
+           
+          </Route>
+
+          
+          <Route path="/" element={<TextForm heading="Enter the Text to Analyze" 
+          mode={mode} /> 
+           }>
+          </Route>
+
+          
+         </Routes>
+
+      </div>
+      
+   
+      </Router>
+    </>
   );
 }
 
