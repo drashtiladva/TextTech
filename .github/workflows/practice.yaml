@@ -11,5 +11,6 @@ jobs:
     steps:
       - name: run command
         run: echo ${GITHUB_REPOSITORY}
-      - name: run command
-        run: echo ${{github.event.name}}
+      - name: Show event
+        run: echo "Event is ${{github.event.name}}"
+
