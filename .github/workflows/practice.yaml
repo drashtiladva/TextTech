@@ -1,0 +1,16 @@
+name: Build and Push Docker Image
+
+on:
+ pull_request:
+    branches:
+    - master
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: run command
+        run: echo ${GITHUB_REPOSITORY}
+      - name: Show event
+        run: echo "Event is ${{github.event.name}}"
+
