@@ -1,0 +1,57 @@
+name: Math Artifact Demo
+
+# ✅ Trigger this workflow on pull requests to the main branch
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  job_1:
+    name: Add 3 and 7 (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform addition
+        run: echo $((3 + 7)) > math-homework.txt
+
+      - name: Upload math result (homework_pre)
+        uses: actions/upload-artifact@v4
+        with:
+          name: homework_pre
+          path: math-homework.txt
+
+  job_2:
+    name: Multiply by 9 (Windows)
+    needs: job_1
+    runs-on: windows-latest
+    steps:
+      - name: Download homework_pre
+        uses: actions/download-artifact@v4
+        with:
+          name: homework_pre
+
+      - name: Multiply result by 9
+        shell: bash
+        run: |
+          value=$(cat math-homework.txt)
+          echo $((value * 9)) > math-homework.txt
+
+      - name: Upload final result (homework_final)
+        uses: actions/upload-artifact@v4
+        with:
+          name: homework_final
+          path: math-homework.txt
+
+  job_3:
+    name: Show final result (macOS)
+    needs: job_2
+    runs-on: macos-latest
+    steps:
+      - name: Download homework_final
+        uses: actions/download-artifact@v4
+        with:
+          name: homework_final
+
+      - name: Print final result
+        run: |
+          result=$(cat math-homework.txt)
+          echo " The final math result is: $result"
