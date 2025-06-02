@@ -3,7 +3,8 @@ name: Math Artifact Demo
 # ✅ Trigger this workflow on pull requests to the main branch
 on:
   pull_request:
-    branches: [main]
+    branches: 
+      - main
 
 jobs:
   job_1:
