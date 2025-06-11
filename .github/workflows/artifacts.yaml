@@ -1,0 +1,76 @@
+name: Math Artifact with Digest
+
+on:
+  pull_request:
+    branches: master
+    
+
+jobs:
+  job_1:
+    name: Add 3 and 7 (Ubuntu)
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.upload.outputs.digest }}
+    steps:
+      - name: Add 3 + 7
+        run: echo $((3 + 7)) > math-homework.txt
+
+      - name: Upload artifact (homework_pre)
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: homework_pre
+          path: math-homework.txt
+
+      - name: Show uploaded digest
+        run: echo "Uploaded Digest ${{ steps.upload.outputs.digest }}"
+
+  job_2:
+    name: Multiply by 9 (Windows)
+    needs: job_1
+    runs-on: windows-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: homework_pre
+
+      - name: Show original file content
+        shell: bash
+        run: cat math-homework.txt
+
+      - name: Multiply by 9
+        shell: bash
+        run: |
+          value=$(cat math-homework.txt)
+          echo $((value * 9)) > math-homework.txt
+
+      - name: Upload final result (homework_final)
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: homework_final
+          path: math-homework.txt
+
+      - name: Show final digest
+        run: echo "Uploaded Final Digest ${{ steps.upload.outputs.digest }}"
+
+  job_3:
+    name: Display final result (macOS)
+    needs: job_2
+    runs-on: macos-latest
+    steps:
+      - name: Download final artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: homework_final
+
+      - name: Display result
+        run: |
+          result=$(cat math-homework.txt)
+          echo "Final result is: $result"
+
+      - name: (Optional) Manual SHA256 digest
+        run: |
+          echo "Manual SHA256:"
+          shasum -a 256 math-homework.txt
